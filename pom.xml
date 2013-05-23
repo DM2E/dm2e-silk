@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dm2e-silk</groupId>
+    <artifactId>dm2e-silk</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <name>LSKI Snapshot Repository</name>
+            <id>lski-snapshots</id>
+            <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.dm2e.ws</groupId>
+            <artifactId>dm2e-ws</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fuberlin.wiwiss.silk</groupId>
+            <artifactId>silk-singlemachine</artifactId>
+            <version>2.5.4-SNAPSHOT</version>
+
+        </dependency>
+    </dependencies>
+
+    
+</project>
