@@ -65,6 +65,7 @@
     <orderEntry type="library" name="Maven: jline:jline:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.clapper:grizzled-slf4j_2.10:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: de.fuberlin.wiwiss.silk:silk-jena:2.5.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.saxon:saxon-dom:9.1.0.8" level="project" />
   </component>
 </module>
 
