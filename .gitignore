@@ -1,9 +1,6 @@
 target
-bin
-dm2e-ws.iml
+dm2e-silk.iml
 .idea
 .project
 .settings
 .classpath
-files/
-catalog-v001.xml
