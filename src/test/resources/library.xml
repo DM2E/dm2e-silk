@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Silk>
+  <Prefixes>
+    <Prefix id="xsd" namespace="http://www.w3.org/2001/XMLSchema#" />
+	<Prefix id="base" namespace="http://silk#"/>
+	<Prefix id="rdf" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+    <Prefix id="rdfs" namespace="http://www.w3.org/2000/01/rdf-schema#" />
+    <Prefix id="owl" namespace="http://www.w3.org/2002/07/owl#" />
+    <Prefix id="302" namespace="http://302.owl#" />
+    <Prefix id="303" namespace="http://303.owl#" />
+  </Prefixes>
+
+  <DataSources>
+    <DataSource id="302" type="file">
+      <Param name="file" value="https://dl.dropboxusercontent.com/u/10852027/dm2e/302.rdf" />
+      <Param name="format" value="RDF/XML" />
+    </DataSource>
+
+    <DataSource id="303" type="file">
+      <Param name="file" value="https://dl.dropboxusercontent.com/u/10852027/dm2e/303.rdf" />
+      <Param name="format" value="RDF/XML" />
+    </DataSource>
+  </DataSources>
+
+  <Interlinks>
+    <Interlink id="302303">
+      <LinkType>owl:sameAs</LinkType>
+
+    <SourceDataset dataSource="302" var="a">
+ <!--       <RestrictTo>
+          ?a rdf:type owl:Class
+        </RestrictTo> -->
+      </SourceDataset>
+
+      <TargetDataset dataSource="303" var="b">
+ <!--       <RestrictTo>
+          ?b rdf:type owl:Class
+        </RestrictTo> -->
+      </TargetDataset>
+
+	  
+ <!--     <LinkageRule>
+		<Compare metric="jaroWinkler">
+		  <TransformInput function="lowerCase">
+				<Input path="?a/rdfs:label"/>
+		  </TransformInput>
+		  <TransformInput function="lowerCase">
+				<Input path="?b/rdfs:label"/>
+		  </TransformInput>
+		</Compare>	         
+	  </LinkageRule>-->
+	  <LinkageRule>
+		<Compare metric="jaroWinkler">
+		  <TransformInput function="lowerCase">
+				<Input path="?a/rdfs:label"/>
+		  </TransformInput>
+		  <TransformInput function="lowerCase">
+				<Input path="?b/rdfs:label"/>
+		  </TransformInput>
+		</Compare>	         
+	  </LinkageRule>
+
+      <Filter/>
+      <Outputs>
+        <Output minConfidence="0.8" type="file" >
+          <Param name="file" value="out.xml"/>
+          <Param name="format" value="ntriples"/>
+        </Output>
+      </Outputs>
+    </Interlink>
+  </Interlinks>
+</Silk>

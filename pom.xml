@@ -10,11 +10,6 @@
 
     <repositories>
         <repository>
-            <id>servicemix</id>
-            <name>Apache ServiceMix Repository</name>
-            <url>http://svn.apache.org/repos/asf/servicemix/m2-repo</url>
-        </repository>
-        <repository>
             <id>mvnrepository</id>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
@@ -49,7 +44,102 @@
             <artifactId>saxon-dom</artifactId>
             <version>9.1.0.8</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1.jbossorg-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.dm2e.silk.Main</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>java.util.logging.config.file</key>
+                                    <value>${project.build.outputDirectory}/logging.properties</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>setup</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.dm2e.silk.SetUp</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>java.util.logging.config.file</key>
+                                    <value>${project.build.outputDirectory}/logging.properties</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>teardown</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.dm2e.silk.TearDown</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>java.util.logging.config.file</key>
+                                    <value>${project.build.outputDirectory}/logging.properties</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <property>
+                                    <name>java.util.logging.config.file</name>
+                                    <value>${project.build.testOutputDirectory}/logging.properties</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+    </build>
 
     
 </project>
