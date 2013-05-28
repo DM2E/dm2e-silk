@@ -10,6 +10,7 @@ public class TearDown {
 			throws IOException {
         System.out.println("TEAR DOWN: Stopping all servers...");
         ManageService.stopAll();
+        eu.dm2e.silk.wsmanager.ManageService.stopAll();
 
     }
 }

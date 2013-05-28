@@ -1,6 +1,7 @@
 package eu.dm2e.silk.services;
 
 import de.fuberlin.wiwiss.silk.Silk;
+import eu.dm2e.ws.api.FilePojo;
 import eu.dm2e.ws.api.WebservicePojo;
 import eu.dm2e.ws.grafeo.jena.GrafeoImpl;
 import eu.dm2e.ws.services.AbstractTransformationService;
@@ -79,7 +80,7 @@ public class SilkService extends AbstractTransformationService {
             log.info("Result: " + g.getTurtle());
 
             Client client = new Client();
-            String resulturl = client.publishFile(file, new GrafeoImpl());
+            String resulturl = client.publishFile(file, new FilePojo());
             jobPojo.addOutputParameterAssignment("generatedLinks", resulturl);
             config.deleteOnExit();
             ds1.deleteOnExit();

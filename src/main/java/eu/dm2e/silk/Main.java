@@ -3,10 +3,9 @@ package eu.dm2e.silk;
 import eu.dm2e.silk.wsmanager.ManageService;
 import eu.dm2e.ws.Config;
 
-import javax.ws.rs.Path;
 import java.io.IOException;
 
-@Path("manage")
+
 public class Main {
 
 
