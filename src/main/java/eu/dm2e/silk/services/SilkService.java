@@ -21,7 +21,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -45,10 +44,10 @@ public class SilkService extends AbstractTransformationService {
 
     @Override
     public void run() {
-        jobPojo.setStarted();
-        GrafeoImpl g =null;
-
         try {
+            jobPojo.setStarted();
+            GrafeoImpl g =null;
+
             File config = crateTempFile(new URL(jobPojo.getWebserviceConfig().getParameterValueByName("config")));
             File ds1 = crateTempFile(new URL(jobPojo.getWebserviceConfig().getParameterValueByName("inputSource")));
             File ds2 = crateTempFile(new URL(jobPojo.getWebserviceConfig().getParameterValueByName("inputDestination")));
@@ -89,14 +88,11 @@ public class SilkService extends AbstractTransformationService {
             jobPojo.setFinished();
             jobPojo.publish();
             log.info("Resulting Job Object: " + jobPojo.getTurtle());
-        } catch (MalformedURLException e) {
-            jobPojo.addLogEntry("Exception orccured: " + e,"ERROR");
+        } catch (Throwable t) {
+            jobPojo.addLogEntry("Exception orccured: " + t,"ERROR");
             jobPojo.setFailed();
             jobPojo.publish();
-        } catch (IOException e) {
-            jobPojo.addLogEntry("Exception orccured: " + e,"ERROR");
-            jobPojo.setFailed();
-            jobPojo.publish();
+            throw new RuntimeException("An Exception occured in SilkService: ", t);
         }
     }
 
