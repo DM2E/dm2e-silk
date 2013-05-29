@@ -75,7 +75,7 @@ public class SilkServiceITCase {
         String url = job.getParameterValueByName("generatedLinks");
         log.info("Results are at: " + url);
         Grafeo g = new GrafeoImpl();
-        g.loadWithoutContentNegotiation(url);
+        g.load(url);
         log.info("Generated Links: " + g.getTurtle());
     }
 
