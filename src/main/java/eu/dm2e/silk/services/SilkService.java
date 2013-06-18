@@ -86,12 +86,12 @@ public class SilkService extends AbstractTransformationService {
             ds2.deleteOnExit();
             file.deleteOnExit();
             jobPojo.setFinished();
-            jobPojo.publish();
+            // jobPojo.publishToService();
             log.info("Resulting Job Object: " + jobPojo.getTurtle());
         } catch (Throwable t) {
             jobPojo.addLogEntry("Exception orccured: " + t,"ERROR");
             jobPojo.setFailed();
-            jobPojo.publish();
+            // jobPojo.publishToService();
             throw new RuntimeException("An Exception occured in SilkService: ", t);
         }
     }
