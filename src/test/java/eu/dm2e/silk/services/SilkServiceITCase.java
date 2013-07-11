@@ -12,9 +12,11 @@ import eu.dm2e.ws.grafeo.jena.GrafeoImpl;
 import eu.dm2e.ws.model.JobStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.logging.Logger;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,9 +25,9 @@ import java.util.logging.Logger;
  * Time: 2:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SilkServiceITCase {
+public class SilkServiceITCase  {
 
-    Logger log = Logger.getLogger(getClass().getName());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     String SERVICE_URI = "http://localhost:9991/silk";
     protected String URI_BASE = "http://localhost:9998/";
@@ -65,7 +67,9 @@ public class SilkServiceITCase {
         // ClientResponse response = webResource.post(ClientResponse.class, config.getTurtle());
         //log.info("JOB STARTED WITH RESPONSE: " + response.getStatus() + " / Location: " + response.getLocation() + " / Content: " + response.getEntity(String.class));
         // URI joburi = response.getLocation();
+        eu.dm2e.ws.services.Client dm2eClient = new eu.dm2e.ws.services.Client();
 
+        config.publishToService(dm2eClient.getConfigWebResource());
 
         ClientResponse response = client
                 .resource(SERVICE_URI)
@@ -97,7 +101,7 @@ public class SilkServiceITCase {
          */
         log.info("Status: " + status);
         assert(status.equals(JobStatus.FINISHED.name()));
-        String url = job.getParameterValueByName("generatedLinks");
+        String url = job.getOutputParameterValueByName("generatedLinks");
         log.info("Results are at: " + url);
         Grafeo g = new GrafeoImpl();
         g.load(url);

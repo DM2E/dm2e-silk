@@ -2,6 +2,7 @@ package eu.dm2e.silk.services;
 
 import de.fuberlin.wiwiss.silk.Silk;
 import eu.dm2e.ws.api.FilePojo;
+import eu.dm2e.ws.api.JobPojo;
 import eu.dm2e.ws.api.WebservicePojo;
 import eu.dm2e.ws.grafeo.jena.GrafeoImpl;
 import eu.dm2e.ws.services.AbstractTransformationService;
@@ -44,6 +45,7 @@ public class SilkService extends AbstractTransformationService {
 
     @Override
     public void run() {
+        JobPojo jobPojo = getJobPojo();
         try {
             jobPojo.setStarted();
             GrafeoImpl g =null;
@@ -86,7 +88,7 @@ public class SilkService extends AbstractTransformationService {
             ds2.deleteOnExit();
             file.deleteOnExit();
             jobPojo.setFinished();
-            // jobPojo.publishToService();
+            jobPojo.publishToService();
             log.info("Resulting Job Object: " + jobPojo.getTurtle());
         } catch (Throwable t) {
             jobPojo.addLogEntry("Exception orccured: " + t,"ERROR");
