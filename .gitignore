@@ -5,3 +5,5 @@ dm2e-silk.iml
 .project
 .settings
 .classpath
+log/
+log-test/

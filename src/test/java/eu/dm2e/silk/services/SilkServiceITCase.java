@@ -1,21 +1,27 @@
 package eu.dm2e.silk.services;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import eu.dm2e.ws.DM2E_MediaType;
+import static org.junit.Assert.*;
+
+import java.net.URI;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.dm2e.silk.wsmanager.ManageService;
 import eu.dm2e.ws.api.JobPojo;
 import eu.dm2e.ws.api.WebserviceConfigPojo;
 import eu.dm2e.ws.api.WebservicePojo;
 import eu.dm2e.ws.grafeo.Grafeo;
 import eu.dm2e.ws.grafeo.jena.GrafeoImpl;
 import eu.dm2e.ws.model.JobStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URI;
 
 
 /**
@@ -30,11 +36,11 @@ public class SilkServiceITCase  {
     Logger log = LoggerFactory.getLogger(getClass());
 
     String SERVICE_URI = "http://localhost:9991/silk";
-    protected String URI_BASE = "http://localhost:9998/";
 
     @Before
     public void setUp() throws Exception {
-        SERVICE_URI = "http://localhost:9991/silk";
+        ManageService.startAll();
+        eu.dm2e.ws.wsmanager.ManageService.startAll();
     }
 
     @Test
@@ -44,8 +50,8 @@ public class SilkServiceITCase  {
         /**
          * SET UP THE CONFIGURATION
          */
-        Client client = new Client();
-        WebResource webResource = client.resource(SERVICE_URI);
+        Client client = ClientBuilder.newClient();
+        WebTarget webResource = client.target(SERVICE_URI);
         WebserviceConfigPojo config = new WebserviceConfigPojo();
         WebservicePojo ws = new WebservicePojo();
         Grafeo gtest = new GrafeoImpl();
@@ -56,9 +62,15 @@ public class SilkServiceITCase  {
         log.info("Webservice found: " + ws.getTurtle());
         log.info("Webservice manually loaded: : " + ws2.getTurtle());
         config.setWebservice(ws);
-        config.getParameterAssignments().add(ws.getParamByName("inputSource").createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/302.rdf"));
-        config.getParameterAssignments().add(ws.getParamByName("inputDestination").createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/303.rdf"));
-        config.getParameterAssignments().add(ws.getParamByName("config").createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/library.xml"));
+		config.getParameterAssignments().add(ws
+			.getParamByName("inputSource")
+			.createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/302.rdf"));
+		config.getParameterAssignments().add(ws
+			.getParamByName("inputDestination")
+			.createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/303.rdf"));
+		config.getParameterAssignments().add(ws
+			.getParamByName("config")
+			.createAssignment("https://dl.dropboxusercontent.com/u/10852027/dm2e/library.xml"));
 
         /**
          * TRIGGER SILK SERVICE
@@ -69,13 +81,15 @@ public class SilkServiceITCase  {
         // URI joburi = response.getLocation();
         eu.dm2e.ws.services.Client dm2eClient = new eu.dm2e.ws.services.Client();
 
-        config.publishToService(dm2eClient.getConfigWebResource());
+        log.warn("" + dm2eClient.getConfigWebTarget().getUri());
+        config.publishToService(dm2eClient.getConfigWebTarget());
 
-        ClientResponse response = client
-                .resource(SERVICE_URI)
-                .type(DM2E_MediaType.TEXT_PLAIN)
-                .put(ClientResponse.class, config.getId());
-        log.info("JOB STARTED WITH RESPONSE: " + response.getStatus() + " / Location: " + response.getLocation() + " / Content: " + response.getEntity(String.class));
+        Response response = client
+                .target(SERVICE_URI)
+                .request()
+                .put(Entity.text(config.getId()));
+        log.info("JOB STARTED WITH RESPONSE: " + response.getStatus() + " / Location: " + response.getLocation() + " / Content: " + response.readEntity(String.class));
+        assertEquals(202, response.getStatus());
         URI joburi = response.getLocation();
 
         /**
@@ -86,7 +100,7 @@ public class SilkServiceITCase  {
         while (status.equals(JobStatus.NOT_STARTED.name()) || status.equals(JobStatus.STARTED.name())) {
             Grafeo g = new GrafeoImpl(joburi.toString());
             job = g.getObjectMapper().getObject(JobPojo.class, joburi.toString());
-            status =  job.getStatus();
+            status =  job.getJobStatus();
             log.info("Check for status: " + status);
             log.info("JOB SO FAR: " + job.getTurtle());
             try {
